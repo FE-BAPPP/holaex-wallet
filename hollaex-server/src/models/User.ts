@@ -1,29 +1,28 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import { Schema, model, Document } from 'mongoose';
 
 export interface IUser extends Document {
   email: string;
-  username: string;
-  passwordHash: string;
-  role: 'USER' | 'ADMIN';
-  derivationIndex?: number;
-  depositAddress?: string;
-  isActive: boolean;
-  lastLoginAt?: Date;
-  createdAt: Date;
-  updatedAt: Date;
+  password: string;
+  derivation_index?: number;
+  wallet_address?: string;
+  points_balance: number;
+  status: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED';
+  created_at: Date;
+  updated_at: Date;
 }
 
 const UserSchema = new Schema<IUser>({
   email: { type: String, required: true, unique: true },
-  username: { type: String, required: true, unique: true },
-  passwordHash: { type: String, required: true },
-  role: { type: String, enum: ['USER', 'ADMIN'], default: 'USER' },
-  derivationIndex: { type: Number, unique: true, sparse: true },
-  depositAddress: { type: String, unique: true, sparse: true },
-  isActive: { type: Boolean, default: true },
-  lastLoginAt: Date
-}, {
-  timestamps: true
+  password: { type: String, required: true },
+  derivation_index: { type: Number, unique: true, sparse: true },
+  wallet_address: { type: String, unique: true, sparse: true },
+  points_balance: { type: Number, default: 0 },
+  status: { type: String, enum: ['ACTIVE', 'INACTIVE', 'SUSPENDED'], default: 'ACTIVE' },
+  created_at: { type: Date, default: Date.now },
+  updated_at: { type: Date, default: Date.now }
 });
 
-export const User = mongoose.model<IUser>('User', UserSchema);
+UserSchema.index({ email: 1 });
+UserSchema.index({ wallet_address: 1 });
+
+export default model<IUser>('User', UserSchema);
