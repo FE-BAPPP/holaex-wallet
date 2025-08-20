@@ -13,7 +13,7 @@ async function main() {
   try {
     switch (command) {
       case 'init':
-        console.log('🏗️  Initializing HollaEx Wallet System...\n');
+        console.log('Initializing HollaEx Wallet System...\n');
         await SetupService.setupComplete();
         break;
         
@@ -24,7 +24,7 @@ async function main() {
         
       case 'generate-wallets':
         const count = parseInt(process.argv[3]) || 1000;
-        console.log(`👛 Generating ${count} child wallets...\n`);
+        console.log(`Generating ${count} child wallets...\n`);
         await mongoose.connect(process.env.MONGODB_URI!);
         await SetupService.generateInitialWalletPool(count);
         break;

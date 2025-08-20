@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IUserPoints extends Document {
-  userId: string;
+  userId: typeof Schema.Types.ObjectId;
   balance: string;
   lockedBalance: string;
   updatedAt: Date;

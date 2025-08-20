@@ -8,7 +8,7 @@ import SecurityService from '../services/security/SecurityService';
 const bip32 = BIP32Factory(ecc);
 
 export class WalletGenerator {
-  private tronWeb: TronWeb;
+  private tronWeb: TronWeb; //typescript typing strict
 
   constructor() {
     this.tronWeb = new TronWeb({

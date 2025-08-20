@@ -1,12 +1,15 @@
-import * as bip32 from 'bip32';
+import * as ecc from 'tiny-secp256k1';
+import BIP32Factory from 'bip32';
 import * as bip39 from 'bip39';
 import TronWeb from 'tronweb';
 import crypto from 'crypto';
 import { ChildWalletPool, User } from '../../models';
 import SecurityService from '../security/SecurityService';
 
+const bip32 = BIP32Factory(ecc);
+
 export class WalletService {
-  private tronWeb: TronWeb;
+  private tronWeb: TronWeb; //typescript typing strict
   private encryptionKey: string;
 
   constructor() {

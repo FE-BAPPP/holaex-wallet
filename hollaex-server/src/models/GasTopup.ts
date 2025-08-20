@@ -2,7 +2,7 @@ import { Schema, model, Document } from 'mongoose';
 
 export interface IGasTopup extends Document {
   child_wallet_address: string;
-  user_id: string;
+  user_id: typeof Schema.Types.ObjectId;
   amount_trx: string;
   tx_hash?: string;
   status: 'PENDING' | 'SENT' | 'CONFIRMED' | 'FAILED';

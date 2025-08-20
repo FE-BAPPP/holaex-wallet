@@ -81,22 +81,22 @@ export class SecurityService {
     }
   }
 
-  /**
-   * Generate secure encryption key
+  
+   /* Generate secure encryption key
    */
   generateEncryptionKey(): string {
     return crypto.randomBytes(this.keyLength).toString('hex');
   }
 
-  /**
-   * Validate mnemonic phrase
+  
+   /* Validate mnemonic phrase
    */
   validateMnemonic(mnemonic: string): boolean {
     return require('bip39').validateMnemonic(mnemonic);
   }
 
-  /**
-   * Generate audit log for sensitive operations
+  
+   /* Generate audit log for sensitive operations
    */
   auditLog(operation: string, userId?: string, details?: any): void {
     const logEntry = {

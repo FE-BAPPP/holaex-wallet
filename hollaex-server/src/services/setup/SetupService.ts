@@ -8,14 +8,14 @@ import TronWeb from 'tronweb';
 export class SetupService {
   
   async initializeMasterWallet(): Promise<void> {
-    console.log('🏗️  Generating master wallet...');
+    console.log('Generating master wallet...');
     
     const masterWallet = WalletGenerator.generateMasterWallet();
-    
-    console.log('✅ Master wallet generated:');
-    console.log(`📍 Address: ${masterWallet.address}`);
-    console.log(`🔑 Mnemonic: ${masterWallet.mnemonic}`);
-    console.log(`🔐 Encryption Key: ${masterWallet.encryptionKey}`);
+
+    console.log('Master wallet generated:');
+    console.log(`Address: ${masterWallet.address}`);
+    console.log(`Mnemonic: ${masterWallet.mnemonic}`);
+    console.log(`Encryption Key: ${masterWallet.encryptionKey}`);
     
     const jwtSecret = WalletGenerator.generateJWTSecret();
     
@@ -26,7 +26,7 @@ export class SetupService {
       JWT_SECRET: jwtSecret
     });
     
-    console.log('✅ Environment file updated');
+    console.log('Environment file updated');
     
     const setupInfo = {
       masterWallet: {
@@ -45,11 +45,11 @@ export class SetupService {
       JSON.stringify(setupInfo, null, 2)
     );
     
-    console.log('⚠️  Setup info saved to setup.json (DELETE IN PRODUCTION!)');
+    console.log('Setup info saved to setup.json (DELETE IN PRODUCTION!)');
   }
 
   async generateInitialWalletPool(count: number = 1000): Promise<void> {
-    console.log(`🏗️  Generating ${count} child wallets...`);
+    console.log(`Generating ${count} child wallets...`);
     
     if (mongoose.connection.readyState === 0) {
       await mongoose.connect(process.env.MONGODB_URI!);
@@ -57,7 +57,7 @@ export class SetupService {
     
     const existingCount = await ChildWalletPool.countDocuments();
     if (existingCount > 0) {
-      console.log(`⚠️  Found ${existingCount} existing wallets. Skipping generation.`);
+      console.log(`Found ${existingCount} existing wallets. Skipping generation.`);
       return;
     }
     
@@ -76,7 +76,7 @@ export class SetupService {
       const startIndex = batch * batchSize;
       const currentBatchSize = Math.min(batchSize, count - startIndex);
       
-      console.log(`📦 Generating batch ${batch + 1}/${batches} (${currentBatchSize} wallets)...`);
+      console.log(`Generating batch ${batch + 1}/${batches} (${currentBatchSize} wallets)...`);
       
       const childWallets = WalletGenerator.batchGenerateChildWallets(
         masterMnemonic,
@@ -92,14 +92,14 @@ export class SetupService {
       
       await ChildWalletPool.insertMany(walletDocs);
       
-      console.log(`✅ Batch ${batch + 1} completed`);
+      console.log(`Batch ${batch + 1} completed`);
     }
     
-    console.log(`🎉 Successfully generated ${count} child wallets!`);
+    console.log(`Successfully generated ${count} child wallets!`);
   }
 
   async testTronConnectivity(): Promise<void> {
-    console.log('🔍 Testing Tron network connectivity...');
+    console.log('Testing Tron network connectivity...');
     
     try {
       const tronWeb = new TronWeb({
@@ -112,8 +112,8 @@ export class SetupService {
         throw new Error('Could not fetch block data from Tron node');
       }
 
-      console.log(`✅ Connected to Tron ${process.env.TRON_NETWORK || 'testnet'}`);
-      console.log(`📊 Current block: ${currentBlock.block_header.raw_data.number}`);
+      console.log(`Connected to Tron ${process.env.TRON_NETWORK || 'testnet'}`);
+      console.log(`Current block: ${currentBlock.block_header.raw_data.number}`);
       
       // Optional USDT check
       if (process.env.USDT_CONTRACT_ADDRESS) {
@@ -121,21 +121,21 @@ export class SetupService {
           const contract = await tronWeb.contract().at(process.env.USDT_CONTRACT_ADDRESS);
           const symbol = await contract.symbol().call();
           const decimals = await contract.decimals().call();
-          console.log(`✅ USDT Contract connected: ${symbol} (${decimals} decimals)`);
+          console.log(`USDT Contract connected: ${symbol} (${decimals} decimals)`);
         } catch (contractErr: any) {
-          console.warn('⚠️  USDT contract test skipped/failed:', contractErr.message || contractErr);
+          console.warn('USDT contract test skipped/failed:', contractErr.message || contractErr);
         }
       } else {
-        console.log('ℹ️  Skipping USDT contract test (no USDT_CONTRACT_ADDRESS in .env)');
+        console.log('Skipping USDT contract test (no USDT_CONTRACT_ADDRESS in .env)');
       }
     } catch (error: any) {
-      console.error('❌ Tron connectivity test failed:', error?.message || error);
+      console.error('Tron connectivity test failed:', error?.message || error);
       throw new Error('Tron connectivity failed: ' + (error?.message || JSON.stringify(error)));
     }
   }
 
   async checkMasterWalletBalance(): Promise<void> {
-    console.log('💰 Checking master wallet balance...');
+    console.log('Checking master wallet balance...');
     
     const setupPath = path.join(process.cwd(), 'setup.json');
     if (!fs.existsSync(setupPath)) {
@@ -147,12 +147,12 @@ export class SetupService {
     
     const addressInfo = await WalletGenerator.getAddressInfo(masterAddress);
     
-    console.log(`📍 Master wallet: ${masterAddress}`);
-    console.log(`💰 TRX Balance: ${addressInfo.balance} TRX`);
+    console.log(`Master wallet: ${masterAddress}`);
+    console.log(`TRX Balance: ${addressInfo.balance} TRX`);
     
     if (addressInfo.balance === 0) {
-      console.log('⚠️  Master wallet has 0 TRX. Please fund it before testing.');
-      console.log('🔗 Get testnet TRX: https://nileex.io/join/getJoinPage');
+      console.log('Master wallet has 0 TRX. Please fund it before testing.');
+      console.log('Get testnet TRX: https://nileex.io/join/getJoinPage');
     }
   }
 
@@ -173,7 +173,7 @@ export class SetupService {
   }
 
   async setupComplete(): Promise<void> {
-    console.log('🚀 Starting HollaEx Wallet setup...\n');
+    console.log('Starting HollaEx Wallet setup...\n');
     
     try {
       await this.testTronConnectivity();
@@ -191,16 +191,16 @@ export class SetupService {
       await this.checkMasterWalletBalance();
       console.log('');
       
-      console.log('🎉 Setup completed successfully!');
+      console.log('Setup completed successfully!');
       console.log('');
-      console.log('📋 Next steps:');
+      console.log('Next steps:');
       console.log('1. Fund your master wallet with testnet TRX');
       console.log('2. Update TRON_GRID_API_KEY in .env with real API key');
       console.log('3. Test user registration and wallet assignment');
       console.log('4. DELETE setup.json file in production!');
       
     } catch (error: any) {
-      console.error('❌ Setup failed:', error?.message || error);
+      console.error('Setup failed:', error?.message || error);
       throw error;
     }
   }

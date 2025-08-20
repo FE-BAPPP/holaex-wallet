@@ -110,22 +110,22 @@ class TestFlow {
       'Test deposit simulation'
     );
     
-    console.log('✅ Credited 100 points to user');
+    console.log('Credited 100 points to user');
     
     // Check balance
     const balance = await PointsService.getBalance(user1._id.toString());
-    console.log(`💰 User balance: ${balance} points`);
+    console.log(`User balance: ${balance} points`);
     
     // Get transaction history
     const history = await PointsService.getTransactionHistory(user1._id.toString(), 1, 5);
-    console.log('📊 Recent transactions:');
+    console.log('Recent transactions:');
     history.forEach((tx, i) => {
       console.log(`   ${i + 1}. ${tx.transaction_type}: ${tx.amount} points (${tx.description})`);
     });
   }
 
   async testTronConnectivity() {
-    console.log('\n🔗 Testing Tron network connectivity...');
+    console.log('\nTesting Tron network connectivity...');
     
     try {
       const TronWeb = require('tronweb');
@@ -136,22 +136,22 @@ class TestFlow {
       
       tronWeb.setAddress(process.env.MASTER_WALLET_ADDRESS!);
       const currentBlock = await tronWeb.trx.getCurrentBlock();
-      console.log(`✅ Connected to Tron ${process.env.TRON_NETWORK}`);
-      console.log(`📊 Current block: ${currentBlock.block_header.raw_data.number}`);
+      console.log(`Connected to Tron ${process.env.TRON_NETWORK}`);
+      console.log(`Current block: ${currentBlock.block_header.raw_data.number}`);
       
       // Test USDT contract
       const contract = await tronWeb.contract().at(process.env.USDT_CONTRACT_ADDRESS!);
       const symbol = await contract.symbol().call();
-      console.log(`✅ USDT Contract: ${symbol}`);
+      console.log(`USDT Contract: ${symbol}`);
       
     } catch (error) {
-      console.error('❌ Tron connectivity failed:', error);
+      console.error('Tron connectivity failed:', error);
       throw error;
     }
   }
 
   async runAllTests() {
-    console.log('🧪 Starting HollaEx Wallet Tests...\n');
+    console.log('Starting HollaEx Wallet Tests...\n');
     
     try {
       await this.connectDB();
@@ -161,16 +161,16 @@ class TestFlow {
       const user = await this.testUserRegistration();
       await this.testPointsEconomy();
       
-      console.log('\n🎉 All tests passed successfully!');
-      console.log('\n📋 System is ready for:');
-      console.log('1. ✅ User registration with wallet assignment');
-      console.log('2. ✅ Points economy (credit/debit/P2P)');
-      console.log('3. ✅ Tron network connectivity');
-      console.log('4. ✅ HD wallet derivation');
-      console.log('\n🚀 Next: Fund master wallet and test deposits!');
+      console.log('\nAll tests passed successfully!');
+      console.log('\nSystem is ready for:');
+      console.log('1. User registration with wallet assignment');
+      console.log('2. Points economy (credit/debit/P2P)');
+      console.log('3. Tron network connectivity');
+      console.log('4. HD wallet derivation');
+      console.log('\nNext: Fund master wallet and test deposits!');
       
     } catch (error) {
-      console.error('\n❌ Test failed:', error);
+      console.error('\nTest failed:', error);
       process.exit(1);
     } finally {
       if (mongoose.connection.readyState !== 0) {

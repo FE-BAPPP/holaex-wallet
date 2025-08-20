@@ -1,7 +1,7 @@
 import { Schema, model, Document } from 'mongoose';
 
 export interface IWithdrawalRequest extends Document {
-  user_id: string;
+  user_id: typeof Schema.Types.ObjectId;
   amount_points: number;
   amount_usdt: string;
   to_address: string;
@@ -10,7 +10,7 @@ export interface IWithdrawalRequest extends Document {
   tx_hash?: string;
   points_locked: boolean;
   lock_reference_id?: string;
-  approved_by?: string;
+  approved_by?: typeof Schema.Types.ObjectId;
   approved_at?: Date;
   processed_at?: Date;
   completed_at?: Date;

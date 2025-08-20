@@ -3,7 +3,7 @@ import { Schema, model, Document } from 'mongoose';
 export interface IWalletTransaction extends Document {
   tx_hash: string;
   log_index: number;
-  user_id: string;
+  user_id: typeof Schema.Types.ObjectId;
   wallet_address: string;
   direction: 'IN' | 'OUT';
   amount: string;

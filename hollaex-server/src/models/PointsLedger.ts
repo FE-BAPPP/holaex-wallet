@@ -1,7 +1,7 @@
 import { Schema, model, Document } from 'mongoose';
 
 export interface IPointsLedger extends Document {
-  user_id: string;
+  user_id: typeof Schema.Types.ObjectId;
   transaction_type: 'DEPOSIT' | 'P2P_SEND' | 'P2P_RECEIVE' | 'PURCHASE' | 'WITHDRAWAL' | 'REFUND';
   amount: number;
   balance_before: number;
