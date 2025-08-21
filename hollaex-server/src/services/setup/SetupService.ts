@@ -10,6 +10,11 @@ export class SetupService {
   async initializeMasterWallet(): Promise<void> {
     console.log('Generating master wallet...');
     
+    const setupPath = path.join(process.cwd(), 'setup.json');
+    if (fs.existsSync(setupPath)) {
+      throw new Error('Master wallet already initialized. Delete setup.json (or run reset) before creating a new one.');
+    }
+
     const masterWallet = WalletGenerator.generateMasterWallet();
 
     console.log('Master wallet generated:');
@@ -175,6 +180,12 @@ export class SetupService {
   async setupComplete(): Promise<void> {
     console.log('Starting HollaEx Wallet setup...\n');
     
+    //Check nếu setup.json đã tồn tại thì dừng luôn
+    const setupPath = path.join(process.cwd(), 'setup.json');
+    if (fs.existsSync(setupPath)) {
+      throw new Error('Setup already completed. Delete setup.json and reset MongoDB before running setup again.');
+    }
+
     try {
       await this.testTronConnectivity();
       console.log('');

@@ -54,3 +54,6 @@ coverage/
 
 # TypeScript
 *.tsbuildinfo
+
+#setup
+setup.json

@@ -1,45 +1,60 @@
-import { Schema, model, Document } from 'mongoose';
+import mongoose, { Document, Schema } from 'mongoose';
 
 export interface IWithdrawalRequest extends Document {
   user_id: typeof Schema.Types.ObjectId;
-  amount_points: number;
-  amount_usdt: string;
+  amount: string;
   to_address: string;
-  status: 'PENDING' | 'APPROVED' | 'REJECTED' | 'PROCESSING' | 'COMPLETED' | 'FAILED';
-  admin_notes?: string;
-  tx_hash?: string;
-  points_locked: boolean;
-  lock_reference_id?: string;
+  status: 'PENDING' | 'APPROVED' | 'REJECTED' | 'COMPLETED';
+  requested_at: Date;
   approved_by?: typeof Schema.Types.ObjectId;
   approved_at?: Date;
-  processed_at?: Date;
+  rejected_by?: typeof Schema.Types.ObjectId;
+  rejected_at?: Date;
+  rejection_reason?: string;
+  tx_hash?: string;
   completed_at?: Date;
-  created_at: Date;
 }
 
 const WithdrawalRequestSchema = new Schema<IWithdrawalRequest>({
-  user_id: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  amount_points: { type: Number, required: true },
-  amount_usdt: { type: String, required: true },
-  to_address: { type: String, required: true },
-  status: { 
-    type: String, 
-    enum: ['PENDING', 'APPROVED', 'REJECTED', 'PROCESSING', 'COMPLETED', 'FAILED'], 
-    default: 'PENDING' 
+  user_id: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
   },
-  admin_notes: { type: String },
-  tx_hash: { type: String },
-  points_locked: { type: Boolean, default: false },
-  lock_reference_id: { type: String },
-  approved_by: { type: Schema.Types.ObjectId, ref: 'User' },
-  approved_at: { type: Date },
-  processed_at: { type: Date },
-  completed_at: { type: Date },
-  created_at: { type: Date, default: Date.now }
+  amount: {
+    type: String,
+    required: true
+  },
+  to_address: {
+    type: String,
+    required: true
+  },
+  status: {
+    type: String,
+    enum: ['PENDING', 'APPROVED', 'REJECTED', 'COMPLETED'],
+    default: 'PENDING'
+  },
+  requested_at: {
+    type: Date,
+    default: Date.now
+  },
+  approved_by: {
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  approved_at: Date,
+  rejected_by: {
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  rejected_at: Date,
+  rejection_reason: String,
+  tx_hash: String,
+  completed_at: Date
 });
 
-WithdrawalRequestSchema.index({ user_id: 1 });
-WithdrawalRequestSchema.index({ status: 1 });
-WithdrawalRequestSchema.index({ created_at: -1 });
+// Indexes
+WithdrawalRequestSchema.index({ user_id: 1, status: 1 });
+WithdrawalRequestSchema.index({ status: 1, requested_at: -1 });
 
-export default model<IWithdrawalRequest>('WithdrawalRequest', WithdrawalRequestSchema);
+export const WithdrawalRequest = mongoose.model<IWithdrawalRequest>('WithdrawalRequest', WithdrawalRequestSchema);

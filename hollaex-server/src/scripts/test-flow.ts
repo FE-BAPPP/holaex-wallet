@@ -130,7 +130,7 @@ class TestFlow {
     try {
       const TronWeb = require('tronweb');
       const tronWeb = new TronWeb({
-        fullHost: process.env.TRON_FULL_NODE || 'https://api.nileex.io',
+        fullHost: process.env.TRON_FULL_NODE || 'https://nile.trongrid.io',
         headers: { 'TRON-PRO-API-KEY': process.env.TRON_GRID_API_KEY }
       });
       

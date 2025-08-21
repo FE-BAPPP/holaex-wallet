@@ -7,6 +7,15 @@ import { logger } from './utils/logger';
 import { errorHandler } from './middleware/errorHandler'
 import { config } from './config';
 
+// Import routes
+import authRoutes from './routes/auth';
+import userRoutes from './routes/user';
+import withdrawalRoutes from './routes/withdrawal';
+
+//import services
+import DepositScanner from './services/deposit/DepositScanner';
+import SweepService from './services/sweep/SweepService';
+
 const app = express();
 
 //security middleware
@@ -40,6 +49,9 @@ app.get('/health', (req, res) => {
 });
 
 //Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/user', userRoutes);
+app.use('/api/withdrawal', withdrawalRoutes);
 
 //Error handing
 app.use(errorHandler);
@@ -68,6 +80,17 @@ async function startServer() {
         logger.error('Error starting server:', error);
     }
 }
+
+//dừng scan khi server tắt
+process.on('SIGTERM', async () => {
+    console.log('SIGTERM received, shutting down gracefully...');
+    
+    DepositScanner.stop();
+    SweepService.stop();
+    
+    await mongoose.disconnect();
+    process.exit(0);
+});
 
 startServer();
 

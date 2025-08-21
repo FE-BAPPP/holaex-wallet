@@ -12,7 +12,7 @@ export class WalletGenerator {
 
   constructor() {
     this.tronWeb = new TronWeb({
-      fullHost: process.env.TRON_FULL_NODE || 'https://api.nileex.io'
+      fullHost: process.env.TRON_FULL_NODE || 'https://nile.trongrid.io'
     });
   }
 
